@@ -9,61 +9,6 @@
 
 # ################
 # ################
-
-
-# #################################
-# # Shared volume(s)
-# certshare:
-#     image: alpine
-#     command: echo "Data volume on"
-#     volumes:
-#       - httpapitemplate_sharedcerts:/opt/certificates
-
-#################################
-# Postgres database server
-sql:
-    image: postgres
-    volumes:
-        - httpapitemplate_sqldata:/var/lib/postgresql/data
-    environment:
-        POSTGRES_USER: myuser
-        POSTGRES_PASSWORD: mypassword
-        POSTGRES_DB: mydatabase
-      # ## FOR IRODS?
-      #   POSTGRES_USER: irods
-      #   POSTGRES_PASSWORD: icatserver
-      #   POSTGRES_DB: ICAT
-
-# #################################
-# # iRODS iCAT server for EUDAT B2safe
-# icat:
-
-#     # # Simple irods server
-#     #image: cineca/icat
-
-#     ## OR
-
-#     # B2safe instance on irods
-#     image: eudatb2safe/b2safe
-
-#     # # Open irods port to Outside world
-#     # ## CAREFULL: don't uncomment the two lines below if you don't know why
-#     # ports:
-#     #     - 1247:1247
-
-#     hostname: rodserver
-#     volumes:
-#         - httpapitemplate_etcconf:/etc
-#         - httpapitemplate_irodshome:/home/irods
-#         - httpapitemplate_irodsvar:/var/lib/irods
-#         - httpapitemplate_eudatopt:/opt
-#         # a script to do operations inside the irods container
-#         - ./confs/irestart.sh:/irestart
-#     volumes_from:
-#       - certshare
-#     links:
-#         - sql:db
-
 #################################
 # GRAPHdb neo4j
 graphdb:
@@ -136,10 +81,10 @@ rest:
     # volumes_from:
     #   - certshare
     links:
-        # # IRODS MUST BE CALLED rodserver
-        # - icat:rodserver
         # GRAPHDB MUST BE CALLED gdb
         - graphdb:gdb
+        # # IRODS MUST BE CALLED rodserver
+        # - icat:rodserver
 
 #################################
 # REST API client
@@ -148,18 +93,6 @@ rest:
 apitests:
     image: eudatb2safe/apiclient
     command: sleep 1234567890
-
-#################################
-# Database administration
-
-# This docker image let you access sqllite/postgres/mysql
-# with a phpmyadmin-like web page
-sqladmin:
-    image: clue/adminer
-    links:
-        - sql:db
-    ports:
-        - 8888:80
 
 #################################
 # Nginx proxy
@@ -174,3 +107,69 @@ proxy:
         - rest:restapi
 
 #################################
+
+
+# #################################
+# # Shared volume(s)
+# certshare:
+#     image: alpine
+#     command: echo "Data volume on"
+#     volumes:
+#       - httpapitemplate_sharedcerts:/opt/certificates
+
+# #################################
+# # Postgres database server
+# sql:
+#     image: postgres
+#     volumes:
+#       - httpapitemplate_sqldata:/var/lib/postgresql/data
+#     environment:
+#         POSTGRES_USER: myuser
+#         POSTGRES_PASSWORD: mypassword
+#         POSTGRES_DB: mydatabase
+#       # ## FOR IRODS?
+#       #   POSTGRES_USER: irods
+#       #   POSTGRES_PASSWORD: icatserver
+#       #   POSTGRES_DB: ICAT
+
+# #################################
+# # iRODS iCAT server for EUDAT B2safe
+# icat:
+
+#     # # Simple irods server
+#     #image: cineca/icat
+
+#     ## OR
+
+#     # B2safe instance on irods
+#     image: eudatb2safe/b2safe
+
+#     # # Open irods port to Outside world
+#     # ## CAREFULL: don't uncomment the two lines below if you don't know why
+#     # ports:
+#     #     - 1247:1247
+
+#     hostname: rodserver
+#     volumes:
+#         - httpapitemplate_etcconf:/etc
+#         - httpapitemplate_irodshome:/home/irods
+#         - httpapitemplate_irodsvar:/var/lib/irods
+#         - httpapitemplate_eudatopt:/opt
+#         # a script to do operations inside the irods container
+#         - ./confs/irestart.sh:/irestart
+#     volumes_from:
+#       - certshare
+#     links:
+#         - sql:db
+
+# #################################
+# # Database administration
+
+# # This docker image let you access sqllite/postgres/mysql
+# # with a phpmyadmin-like web page
+# sqladmin:
+#     image: clue/adminer
+#     links:
+#         - sql:db
+#     ports:
+#         - 8888:80
