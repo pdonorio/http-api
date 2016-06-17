@@ -11,54 +11,58 @@
 # ################
 
 
-#################################
-# Shared volume(s)
-certshare:
-    image: alpine
-    command: echo "Data volume on"
-    volumes:
-      - httpapi_sharedcerts:/opt/certificates
+# #################################
+# # Shared volume(s)
+# certshare:
+#     image: alpine
+#     command: echo "Data volume on"
+#     volumes:
+#       - httpapitemplate_sharedcerts:/opt/certificates
 
 #################################
 # Postgres database server
 sql:
     image: postgres
     volumes:
-        - httpapi_sqldata:/var/lib/postgresql/data
+        - httpapitemplate_sqldata:/var/lib/postgresql/data
     environment:
-        POSTGRES_USER: irods
-        POSTGRES_PASSWORD: icatserver
-        POSTGRES_DB: ICAT
+        POSTGRES_USER: myuser
+        POSTGRES_PASSWORD: mypassword
+        POSTGRES_DB: mydatabase
+      # ## FOR IRODS?
+      #   POSTGRES_USER: irods
+      #   POSTGRES_PASSWORD: icatserver
+      #   POSTGRES_DB: ICAT
 
-#################################
-# iRODS iCAT server for EUDAT B2safe
-icat:
+# #################################
+# # iRODS iCAT server for EUDAT B2safe
+# icat:
 
-    # # Simple irods server
-    #image: cineca/icat
+#     # # Simple irods server
+#     #image: cineca/icat
 
-    ## OR
+#     ## OR
 
-    # B2safe instance on irods
-    image: eudatb2safe/b2safe
+#     # B2safe instance on irods
+#     image: eudatb2safe/b2safe
 
-    # # Open irods port to Outside world
-    # ## CAREFULL: don't uncomment the two lines below if you don't know why
-    # ports:
-    #     - 1247:1247
+#     # # Open irods port to Outside world
+#     # ## CAREFULL: don't uncomment the two lines below if you don't know why
+#     # ports:
+#     #     - 1247:1247
 
-    hostname: rodserver
-    volumes:
-        - httpapi_etcconf:/etc
-        - httpapi_irodshome:/home/irods
-        - httpapi_irodsvar:/var/lib/irods
-        - httpapi_eudatopt:/opt
-        # a script to do operations inside the irods container
-        - ./confs/irestart.sh:/irestart
-    volumes_from:
-      - certshare
-    links:
-        - sql:db
+#     hostname: rodserver
+#     volumes:
+#         - httpapitemplate_etcconf:/etc
+#         - httpapitemplate_irodshome:/home/irods
+#         - httpapitemplate_irodsvar:/var/lib/irods
+#         - httpapitemplate_eudatopt:/opt
+#         # a script to do operations inside the irods container
+#         - ./confs/irestart.sh:/irestart
+#     volumes_from:
+#       - certshare
+#     links:
+#         - sql:db
 
 #################################
 # GRAPHdb neo4j
@@ -71,7 +75,7 @@ graphdb:
       #NEO4J_HEAP_MEMORY
       #NEO4J_CACHE_MEMORY
     volumes:
-        - httpapi_graphdata:/data
+        - httpapitemplate_graphdata:/data
 
 #################################
 # iRODS iCAT server for EUDAT B2safe
@@ -86,17 +90,18 @@ rest:
       # APP_MODE: development
       # APP_MODE: production
 
-      # Application credentials to use the b2access environment
-      B2ACCESS_APPNAME: httpapi
-      B2ACCESS_APPKEY: GIVEMEAVALIDKEY
-
       # Base the user/role mechanism on neo4j
       BACKEND_AUTH_SERVICE: graphdb
-      ## Connection to irods
-      IRODS_USER: rods
-      # IRODS_AUTHSCHEME: GSI
-      # IRODS_USER: paolo
-      IRODS_ZONE: tempZone
+
+      # # Application credentials to use the b2access environment
+      # B2ACCESS_APPNAME: httpapi
+      # B2ACCESS_APPKEY: GIVEMEAVALIDKEY
+
+      # ## Connection to irods
+      # IRODS_USER: rods
+      # # IRODS_AUTHSCHEME: GSI
+      # # IRODS_USER: paolo
+      # IRODS_ZONE: tempZone
 
       ## X509 certificates variables
       #CA Authority
@@ -107,10 +112,10 @@ rest:
 
     working_dir: /code
     volumes:
-        # Uploads dir
-        - httpapi_tmpuploads:/uploads
-        # Sql lite database (only for this container)
-        - httpapi_restlitedb:/dbs
+        # # Uploads dir
+        # - httpapitemplates_tmpuploads:/uploads
+        # # Sql lite database (only for this container)
+        # - httpapitemplates_restlitedb:/dbs
         # Base code
         - ./backend:/code
         # Rest API configuration
@@ -119,8 +124,8 @@ rest:
         - ./vanilla/models:/code/commons/models/custom
         # Rest API endpoints
         - ./vanilla/apis:/code/restapi/resources/custom
-        # B2ACCESS dev certificates
-        - ./certs:/usr/local/share/ca-certificates
+        # # B2ACCESS dev certificates
+        # - ./certs:/usr/local/share/ca-certificates
         # Tests
         - ./vanilla/tests:/code/test/custom
 
@@ -128,11 +133,11 @@ rest:
         # - ./certs/caauth:/opt/certificates/caauth
         # # External irods User
         # - ./certs/user:/opt/certificates/paolo
-    volumes_from:
-      - certshare
+    # volumes_from:
+    #   - certshare
     links:
-        # IRODS MUST BE CALLED rodserver
-        - icat:rodserver
+        # # IRODS MUST BE CALLED rodserver
+        # - icat:rodserver
         # GRAPHDB MUST BE CALLED gdb
         - graphdb:gdb
 
