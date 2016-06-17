@@ -44,7 +44,7 @@ restcontainer="rest"
 proxycontainer="proxy"
 clientcontainer="apitests"
 vcom="docker volume"
-vprefix="httpapi_"
+vprefix="httpapitemplate_"
 
 compose_base="docker-compose -f docker-compose.yml"
 
