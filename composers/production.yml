@@ -2,6 +2,9 @@
 rest:
   environment:
     APP_MODE: production
+  links:
+      # GRAPHDB MUST BE CALLED gdb
+      - graphdb:gdb
 
 proxy:
   #################

@@ -1,0 +1,20 @@
+
+graphdb:
+  ports:
+    - 9090:7474
+
+training:
+  extends:
+    file: docker-compose.yml
+    service: rest
+  environment:
+    APP_MODE: debug
+  links:
+    # IRODS MUST BE CALLED rodserver
+    - icat:rodserver
+    # GRAPHDB MUST BE CALLED gdb
+    - graphdb:gdb
+  volumes:
+    - ./training:/code/training
+  volumes_from:
+    - certshare

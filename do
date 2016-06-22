@@ -9,7 +9,7 @@ if [ "$1" == "help" -o -z "$1" ]; then
     echo "Available commands:"
     echo ""
     echo -e "init:\t\tStartup your repository code, containers and volumes"
-    # echo -e "irestart:\tRestart the main iRODS iCAT service instance"
+    echo -e "training:\tLaunch the environment for training on GraphDB"
     # echo -e "addiuser:\tAdd a new certificated user to irods"
     echo ""
     echo -e "check:\tCheck the stack status"
@@ -17,7 +17,8 @@ if [ "$1" == "help" -o -z "$1" ]; then
     echo -e "remove:\tRemove all containers"
     echo -e "clean:\tRemove containers and volumes (BE CAREFUL!)"
     echo ""
-    # echo -e "irods_shell:\tOpen a shell inside the iRODS iCAT server container"
+    echo -e "irestart:\tRestart the main iRODS iCAT service instance"
+    echo -e "irods_shell:\tOpen a shell inside the iRODS iCAT server container"
     echo -e "server_shell:\tOpen a shell inside the Flask server container"
     echo -e "client_shell:\tOpen a shell to test API endpoints"
     echo -e "api_test:\tRun tests with nose (+ coverage)"
@@ -56,12 +57,13 @@ if [ "$1" == "init" ]; then
 elif [ "$1" == "PRODUCTION" ]; then
     compose_run="$compose_base -f composers/production.yml"
 
-## // TO FIX:
-    # Check for certificates
-
 # Development mode
 elif [ "$1" == "DEVELOPMENT" ]; then
     compose_run="$compose_base -f composers/development.yml"
+
+# Training mode
+elif [ "$1" == "training" ]; then
+    compose_run="$compose_base -f composers/training.yml"
 
 # Normal / debug mode
 else
@@ -165,9 +167,12 @@ volumes=`$vcom ls | awk '{print $NF}' | grep "^$vprefix"`
 #echo -e "VOLUMES are\n*$volumes*"
 if [ "$volumes"  == "" ]; then
     if [ "$1" != "init" ]; then
-        echo "Please init this project."
-        echo "You may do so by running:"
+        echo ""
+        echo "Docker volumes missing! Please *init* this project."
+        echo "To do so just run:"
+        echo ""
         echo "\$ $0 init"
+        echo ""
         exit 1
     fi
 fi
@@ -197,6 +202,20 @@ if [ "$1" == "init" ]; then
         echo "\$ $0 DEBUG"
         echo ""
     fi
+    exit 0
+
+# EUDAT training
+elif [ "$1" == "training" ]; then
+    container="training"
+    $compose_run rm -f --all $container
+    $compose_run up -d $container
+    $compose_run exec --user root $container chown -R root /opt/certificates
+    echo ""
+    echo "Please edit the python file with path'./training/custom.py',"
+    echo "then execute your code within the container:"
+    echo "$ ./training.py"
+    echo ""
+    $compose_run exec --user root $container bash
     exit 0
 
 # Verify the status

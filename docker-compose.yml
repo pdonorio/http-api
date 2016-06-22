@@ -42,11 +42,11 @@ rest:
       # B2ACCESS_APPNAME: httpapi
       # B2ACCESS_APPKEY: GIVEMEAVALIDKEY
 
-      # ## Connection to irods
-      # IRODS_USER: rods
-      # # IRODS_AUTHSCHEME: GSI
-      # # IRODS_USER: paolo
-      # IRODS_ZONE: tempZone
+      ## Connection to irods
+      IRODS_USER: rods
+      # IRODS_AUTHSCHEME: GSI
+      # IRODS_USER: paolo
+      IRODS_ZONE: tempZone
 
       ## X509 certificates variables
       #CA Authority
@@ -80,11 +80,6 @@ rest:
         # - ./certs/user:/opt/certificates/paolo
     # volumes_from:
     #   - certshare
-    links:
-        # GRAPHDB MUST BE CALLED gdb
-        - graphdb:gdb
-        # # IRODS MUST BE CALLED rodserver
-        # - icat:rodserver
 
 #################################
 # REST API client
@@ -107,69 +102,63 @@ proxy:
         - rest:restapi
 
 #################################
+# Shared volume(s)
+certshare:
+    image: alpine
+    command: echo "Data volume on"
+    volumes:
+      - httpapitemplate_sharedcerts:/opt/certificates
 
+#################################
+# Postgres database server
+sql:
+    image: postgres
+    volumes:
+      - httpapitemplate_sqldata:/var/lib/postgresql/data
+    environment:
+      ## FOR IRODS
+        POSTGRES_USER: irods
+        POSTGRES_PASSWORD: icatserver
+        POSTGRES_DB: ICAT
 
-# #################################
-# # Shared volume(s)
-# certshare:
-#     image: alpine
-#     command: echo "Data volume on"
-#     volumes:
-#       - httpapitemplate_sharedcerts:/opt/certificates
+#################################
+# iRODS iCAT server for EUDAT B2safe
+icat:
 
-# #################################
-# # Postgres database server
-# sql:
-#     image: postgres
-#     volumes:
-#       - httpapitemplate_sqldata:/var/lib/postgresql/data
-#     environment:
-#         POSTGRES_USER: myuser
-#         POSTGRES_PASSWORD: mypassword
-#         POSTGRES_DB: mydatabase
-#       # ## FOR IRODS?
-#       #   POSTGRES_USER: irods
-#       #   POSTGRES_PASSWORD: icatserver
-#       #   POSTGRES_DB: ICAT
+    # # Simple irods server
+    #image: cineca/icat
 
-# #################################
-# # iRODS iCAT server for EUDAT B2safe
-# icat:
+    ## OR
 
-#     # # Simple irods server
-#     #image: cineca/icat
+    # B2safe instance on irods
+    image: eudatb2safe/b2safe
 
-#     ## OR
+    # # Open irods port to Outside world
+    # ## CAREFULL: don't uncomment the two lines below if you don't know why
+    # ports:
+    #     - 1247:1247
 
-#     # B2safe instance on irods
-#     image: eudatb2safe/b2safe
+    hostname: rodserver
+    volumes:
+        - httpapitemplate_etcconf:/etc
+        - httpapitemplate_irodshome:/home/irods
+        - httpapitemplate_irodsvar:/var/lib/irods
+        - httpapitemplate_eudatopt:/opt
+        # a script to do operations inside the irods container
+        - ./confs/irestart.sh:/irestart
+    volumes_from:
+      - certshare
+    links:
+        - sql:db
 
-#     # # Open irods port to Outside world
-#     # ## CAREFULL: don't uncomment the two lines below if you don't know why
-#     # ports:
-#     #     - 1247:1247
+#################################
+# Database administration
 
-#     hostname: rodserver
-#     volumes:
-#         - httpapitemplate_etcconf:/etc
-#         - httpapitemplate_irodshome:/home/irods
-#         - httpapitemplate_irodsvar:/var/lib/irods
-#         - httpapitemplate_eudatopt:/opt
-#         # a script to do operations inside the irods container
-#         - ./confs/irestart.sh:/irestart
-#     volumes_from:
-#       - certshare
-#     links:
-#         - sql:db
-
-# #################################
-# # Database administration
-
-# # This docker image let you access sqllite/postgres/mysql
-# # with a phpmyadmin-like web page
-# sqladmin:
-#     image: clue/adminer
-#     links:
-#         - sql:db
-#     ports:
-#         - 8888:80
+# This docker image let you access sqllite/postgres/mysql
+# with a phpmyadmin-like web page
+sqladmin:
+    image: clue/adminer
+    links:
+        - sql:db
+    ports:
+        - 8888:80

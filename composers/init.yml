@@ -12,14 +12,17 @@ sql:
   volumes:
    - ./confs/pgs_init.sh:/docker-entrypoint-initdb.d/setup-my-schema.sh:ro
 
-# icat:
-#   command: /install
-#   volumes:
-#    - ./confs/credentials.conf:/myconfig:ro
+icat:
+  command: /install
+  volumes:
+   - ./confs/credentials.conf:/myconfig:ro
 
 rest:
     user: root
     command: /fix
+    links:
+        # # IRODS MUST BE CALLED rodserver
+        - icat:rodserver
     volumes:
 #      - ./confs/fixirodsclient.sh:/fix
       - ./confs/rest_init.sh:/fix

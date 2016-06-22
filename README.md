@@ -32,6 +32,16 @@ git clone https://github.com/pdonorio/restapi-template.git
 
 ```
 
-## Documentation
+## Training
 
-To be done...
+With the following commands you can setup your machine
+to start training on handling data
+from/to:
+* iRODS (B2SAFE)
+* and GraphDB (neo4j)
+
+```bash
+git clone https://github.com/pdonorio/restapi-template.git
+./do init
+./do training
+```
