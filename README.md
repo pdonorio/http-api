@@ -45,3 +45,11 @@ git clone https://github.com/pdonorio/restapi-template.git
 ./do init
 ./do training
 ```
+
+At this point you may start to code abd interact with iRODS and neo4j.
+
+The files that you may edit are:
+
+- `training/custom.py`: just edit the class `CustomClass`, the method `run` is enough. You can find basic examples commented (irods commands, neo4j cypher query, neo4j models).
+- `training/models.py`: models to be used inside the GraphDB. Based on the [neomodel](neomodel.readthedocs.io) python library.
+
