@@ -5,8 +5,10 @@ rest:
   ports:
     - 8080:5000
   links:
-      # GRAPHDB MUST BE CALLED gdb
+      # Graphdb must be called gdb
       - graphdb:gdb
+      # Elasticsearch must be called el
+      - searchindex:el
 
 graphdb:
   ports:

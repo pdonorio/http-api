@@ -9,6 +9,7 @@
 
 # ################
 # ################
+
 #################################
 # GRAPHdb neo4j
 graphdb:
@@ -21,6 +22,20 @@ graphdb:
       #NEO4J_CACHE_MEMORY
     volumes:
         - httpapitemplate_graphdata:/data
+
+#################################
+# TextIndexing elasticsearch
+searchindex:
+  image: elasticsearch
+  hostname: elastic
+  environment:
+      ES_HEAP_SIZE: 2g
+      # curl http://el:9200/_nodes/process?pretty
+      # http://stackoverflow.com/a/18152957/2114395
+      #https://www.loggly.com/blog/nine-tips-configuring-elasticsearch-for-high-performance/
+  volumes:
+      - httpapitemplate_elasticdata:/usr/share/elasticsearch/data
+      - ./confs/elastic:/usr/share/elasticsearch/config
 
 #################################
 # iRODS iCAT server for EUDAT B2safe
