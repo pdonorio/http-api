@@ -33,10 +33,10 @@ class SomeRestEndpoint(ExtendedApiResource):
         # queryout = graph.cypher("MATCH (n) RETURN (n)")
         # print(queryout)
 
-        ####################
-        # Test elastic
-        es = self.global_get_service('elasticsearch')
-        print(es)
-        es.index_up(self._index_name)
+        # ####################
+        # # Test elastic
+        # es = self.global_get_service('elasticsearch')
+        # print(es)
+        # es.index_up(self._index_name)
 
         return self.response(hello)

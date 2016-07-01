@@ -7,8 +7,8 @@ rest:
   links:
       # Graphdb must be called gdb
       - graphdb:gdb
-      # Elasticsearch must be called el
-      - searchindex:el
+      # # Elasticsearch must be called el
+      # - searchindex:el
 
 graphdb:
   ports:
