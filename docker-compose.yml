@@ -28,11 +28,11 @@ graphdb:
 searchindex:
   image: elasticsearch
   hostname: elastic
-  environment:
-      ES_HEAP_SIZE: 2g
-      # curl http://el:9200/_nodes/process?pretty
-      # http://stackoverflow.com/a/18152957/2114395
-      #https://www.loggly.com/blog/nine-tips-configuring-elasticsearch-for-high-performance/
+  # environment:
+  #     ES_HEAP_SIZE: 2g
+  #     # curl http://el:9200/_nodes/process?pretty
+  #     # http://stackoverflow.com/a/18152957/2114395
+  #     #https://www.loggly.com/blog/nine-tips-configuring-elasticsearch-for-high-performance/
   volumes:
       - httpapitemplate_elasticdata:/usr/share/elasticsearch/data
       - ./confs/elastic:/usr/share/elasticsearch/config

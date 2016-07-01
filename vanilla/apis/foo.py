@@ -19,6 +19,8 @@ logger = get_logger(__name__)
 #####################################
 class SomeRestEndpoint(ExtendedApiResource):
 
+    _index_name = 'justatest'
+
     @decorate.apimethod
     def get(self):
 
@@ -33,7 +35,8 @@ class SomeRestEndpoint(ExtendedApiResource):
 
         ####################
         # Test elastic
-        elastic = self.global_get_service('elasticsearch')
-        print(elastic)
+        es = self.global_get_service('elasticsearch')
+        print(es)
+        es.index_up(self._index_name)
 
         return self.response(hello)
