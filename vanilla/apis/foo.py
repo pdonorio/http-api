@@ -10,8 +10,7 @@ from ..base import ExtendedApiResource
 from .. import decorators as decorate
 
 # AUTH
-# from ...confs import config
-# from flask.ext.security import roles_required, auth_token_required
+from ...auth import auth
 
 logger = get_logger(__name__)
 
@@ -21,6 +20,7 @@ class SomeRestEndpoint(ExtendedApiResource):
 
     _index_name = 'justatest'
 
+    # @auth.login_required
     @decorate.apimethod
     def get(self):
 
@@ -39,4 +39,10 @@ class SomeRestEndpoint(ExtendedApiResource):
         # print(es)
         # es.index_up(self._index_name)
 
-        return self.response(hello)
+        # ####################
+        # # Testing returns
+        # return self.report_generic_error()
+        # return self.force_response(errors="failed")
+        # return {'errors': 'test', 'defined_content': None}
+        # return self.response(hello)
+        return hello

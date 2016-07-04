@@ -188,7 +188,7 @@ if [ "$1" == "init" ]; then
     echo "Containers stopping"
     $compose_run stop
     echo "Containers deletion"
-    $compose_run rm -f --all
+    $compose_run rm -f
     if [ "$volumes"  != "" ]; then
         echo "Destroy volumes:"
         docker volume rm $volumes
@@ -207,7 +207,7 @@ if [ "$1" == "init" ]; then
 # EUDAT training
 elif [ "$1" == "training" ]; then
     container="training"
-    $compose_run rm -f --all $container
+    $compose_run rm -f $container
     $compose_run up -d $container
     $compose_run exec --user root $container chown -R root /opt/certificates
     echo ""
@@ -234,7 +234,7 @@ elif [ "$1" == "stop" ]; then
 elif [ "$1" == "remove" ]; then
     echo "REMOVE CONTAINERS"
     $compose_run stop
-    $compose_run rm -f --all
+    $compose_run rm -f
     exit 0
 
 # Destroy everything: containers and data saved so far
@@ -243,7 +243,7 @@ elif [ "$1" == "clean" ]; then
     echo "are you really sure?"
     sleep 5
     $compose_run stop
-    $compose_run rm -f --all
+    $compose_run rm -f
     for volume in $volumes;
     do
         echo "Remove $volume volume"
@@ -295,7 +295,7 @@ then
     if [ "$2" == "restart" ]; then
         echo "Clean previous containers"
         $compose_run stop
-        $compose_run rm -f --all
+        $compose_run rm -f
     fi
 
     # Check certificates
