@@ -298,12 +298,10 @@ then
         $compose_run rm -f
     fi
 
-# TO FIX
     case $2 in
         ''|*[!0-9]*) ;;
         *)
             echo "Setting $2 worker(s)"
-            # $compose_run start worker
             $compose_run scale worker=$2
             ;;
     esac

@@ -49,6 +49,7 @@ redqueue:
 worker:
     hostname: celworker
     image: eudatb2safe/apiserver
+    # command: celery woker
     command: sleep infinity
 
 #################################

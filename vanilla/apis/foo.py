@@ -14,6 +14,12 @@ from .. import decorators as decorate
 
 logger = get_logger(__name__)
 
+from commons.services.tasks import celery_app
+
+@celery_app.task
+def foo():
+    print("TEST")
+
 
 #####################################
 class SomeRestEndpoint(ExtendedApiResource):
@@ -26,6 +32,7 @@ class SomeRestEndpoint(ExtendedApiResource):
 
         hello = "Hello world"
         logger.info(hello)
+        foo.delay()
 
         # ####################
         # # Test graph

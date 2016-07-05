@@ -5,16 +5,18 @@ rest:
   ports:
     - 8080:5000
   links:
-      # Graphdb must be called gdb
-      - graphdb:gdb
-      # Redis db (as a queue) should be called queue
-      - redqueue:queue
-      # # Elasticsearch must be called el
-      # - searchindex:el
+    # Graphdb must be called gdb
+    - graphdb:gdb
+    # Redis db (as a queue) should be called queue
+    - redqueue:queue
+    # # Elasticsearch must be called el
+    # - searchindex:el
 
 worker:
   links:
-      - redqueue:queue
+    # Note: VERY IMPORTANT to keep the same redis name
+    # between worker and rest
+    - redqueue:queue
 
 graphdb:
   ports:
