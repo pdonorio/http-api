@@ -9,8 +9,8 @@ from commons.logs import get_logger
 from ..base import ExtendedApiResource
 from .. import decorators as decorate
 
-# AUTH
-from ...auth import auth
+# # AUTH
+# from ...auth import auth
 
 logger = get_logger(__name__)
 
@@ -45,4 +45,5 @@ class SomeRestEndpoint(ExtendedApiResource):
         # return self.force_response(errors="failed")
         # return {'errors': 'test', 'defined_content': None}
         # return self.response(hello)
+
         return hello

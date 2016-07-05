@@ -38,6 +38,20 @@ searchindex:
       - ./confs/elastic:/usr/share/elasticsearch/config
 
 #################################
+# REDIS key/value store
+redqueue:
+  image: redis:alpine
+  command: redis-server --appendonly yes
+  hostname: myqueue
+  volumes:
+      - httpapitemplate_redisdata:/data
+
+worker:
+    hostname: celworker
+    image: eudatb2safe/apiserver
+    command: sleep infinity
+
+#################################
 # iRODS iCAT server for EUDAT B2safe
 rest:
     hostname: api

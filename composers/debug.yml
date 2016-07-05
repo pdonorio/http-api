@@ -7,8 +7,14 @@ rest:
   links:
       # Graphdb must be called gdb
       - graphdb:gdb
+      # Redis db (as a queue) should be called queue
+      - redqueue:queue
       # # Elasticsearch must be called el
       # - searchindex:el
+
+worker:
+  links:
+      - redqueue:queue
 
 graphdb:
   ports:
