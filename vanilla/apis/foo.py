@@ -44,6 +44,7 @@ class SomeRestEndpoint(ExtendedApiResource):
         # graph = self.global_get_service('neo4j')
         # queryout = graph.cypher("MATCH (n) RETURN (n)")
         # print(queryout)
+        # # Note: for neomodel examples check the file `training/custom.py`
 
         # ####################
         # # Test elastic

@@ -5,14 +5,17 @@ Tests
 """
 
 # import io
-# import os
+import os
 import json
 import unittest
-# import commons.htmlcodes as hcodes
+import commons.htmlcodes as hcodes
 from commons.logs import get_logger
 from restapi.server import create_app
 from restapi.confs.config import USER, PWD, \
     TEST_HOST, SERVER_PORT, API_URL, AUTH_URL
+
+from commons.tests.utilities import TestUtilities
+    # , API_URI, OK, NO_CONTENT, BAD_REQUEST, FORBIDDEN, NOTFOUND, NOT_ALLOWED
 
 from commons import myself
 
@@ -23,7 +26,7 @@ API_URI = 'http://%s:%s%s' % (TEST_HOST, SERVER_PORT, API_URL)
 AUTH_URI = 'http://%s:%s%s' % (TEST_HOST, SERVER_PORT, AUTH_URL)
 
 
-class TestDataObjects(unittest.TestCase):
+class TestDataObjects(TestUtilities):
 
     @classmethod
     def setUpClass(cls):
@@ -43,12 +46,31 @@ class TestDataObjects(unittest.TestCase):
     def tearDownClass(cls):
         logger.info('### Tearing down the flask server ###')
 
-        # Tokens clean up
-        from restapi.resources.services.neo4j.graph import MyGraph
-        MyGraph().clean_pending_tokens()
+        # # Tokens clean up
+        # from restapi.resources.services.neo4j.graph import MyGraph
+        # MyGraph().clean_pending_tokens()
+
+    # def test_00_do_login(self):
+
+    #     # FIRST USER admin
+    #     headers, token = self.do_login(USER, PWD)
+    #     self.save("headers", headers)
+    #     self.save("token", token)
 
     # def test_01_get_someendpoint(self):
 
     #     logger.debug("Testing a random endpoint")
-    #     r = self.app.get(AUTH_URI + '/profile', headers=self.auth_header)
+
+    #     headers = self.get("headers")
+    #     self._test_endpoint(
+    #         'myclass',
+    #         headers=headers,
+    #         private_get=True,
+    #         # private_post=True,
+    #         # private_put=True,
+    #         # private_delete=True
+    #     )
+
+    # def test_02_get_old_style(self):
+    #     r = self.app.get(API_URI + '/myclass', headers=self.auth_header)
     #     self.assertEqual(r.status_code, hcodes.HTTP_OK_BASIC)

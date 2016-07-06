@@ -1,0 +1,18 @@
+// B2SAFE REST API configuration
+{
+
+    // Define some code that does not contain any endpoint
+    // e.g. your custom response
+    //"custom.response": { },
+
+    // File it's supposed to be 'vanilla/apis/foo.py' => custom.foo
+    "custom.foo": {
+        // Class inside the foo.py file
+        "SomeRestEndpoint": [
+            // List of endpoints to which I will map my Class
+            "myendpoint"
+            // Example of parametric ID
+            //"myendpoint/<int:id>"
+        ]
+    }
+}

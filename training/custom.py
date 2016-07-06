@@ -25,6 +25,8 @@ class CustomClass(Training):
         iRODS and GraphDB
         """
 
+        logger.info("\n\nPlease implement 'CustomClass.run' method :)\n")
+
         ###############################
         # iRODS icommands examples
 
@@ -41,20 +43,39 @@ class CustomClass(Training):
 
         # queryout = self._graph.cypher("MATCH (n) RETURN (n)")
 
-        ###############################
+        ##############################
         # GraphDB neomodel
         # Note: see models in training/models.py
 
+        # someemail = 'myaddress@gmail.com'
+
+        # ##############
+        # # Insert data
+
+        # # insert one Person
         # me = self._graph.Person(
-        #     email='myaddress@gmail.com',
-        #     first_name='My',
+        #     email=someemail,
+        #     first_name='Peter',
         #     surname_name='Self'
         # )
         # me.save()
+
+        # # insert one Job
         # myjob = self._graph.Job(name='Developer')
         # myjob.save()
+
+        # # connect Person to a Job
         # me.work_as.connect(myjob)
 
+        # ##############
+        # # Query data
+
+        # one = self._graph.Person.nodes.get(email=someemail)
+        # logger.debug("Obtained node %s" % one)
+
+        # for job in one.work_as.all():
+        #     logger.debug("'%s' has job '%s'" % (one.first_name, job.name))
+
         ###############################
-        logger.info("\n\nPlease implement 'CustomClass.run' method :)\n")
+
         return False
