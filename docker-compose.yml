@@ -51,7 +51,10 @@ worker:
   image: eudatb2safe/apiserver
   command: celery worker -A restapi.resources.services.celery.worker.celery_app
   volumes:
-      - ./backend:/code
+    # Base code
+    - ./backend:/code
+    # Rest API asynchrounous tasks
+    - ./vanilla/tasks:/code/commons/tasks/custom
   working_dir: /code
 
 #################################

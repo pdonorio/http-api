@@ -31,9 +31,13 @@ class SomeRestEndpoint(ExtendedApiResource):
 
         # ####################
         # # Test celery asynchronous tasks
+
         # from commons.tasks.base.examples import foo, foo_in_context
         # foo.delay()
         # foo_in_context.delay("Hello")
+
+        # from commons.tasks.custom.mytasks import test_task
+        # test_task.delay("It works!")
 
         # ####################
         # # Test graph
