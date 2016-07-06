@@ -47,10 +47,12 @@ redqueue:
       - httpapitemplate_redisdata:/data
 
 worker:
-    hostname: celworker
-    image: eudatb2safe/apiserver
-    # command: celery woker
-    command: sleep infinity
+  hostname: celworker
+  image: eudatb2safe/apiserver
+  command: celery worker -A restapi.resources.services.celery.worker.celery_app
+  volumes:
+      - ./backend:/code
+  working_dir: /code
 
 #################################
 # iRODS iCAT server for EUDAT B2safe
@@ -87,16 +89,14 @@ rest:
 
     working_dir: /code
     volumes:
-        # # Uploads dir
-        # - httpapitemplates_tmpuploads:/uploads
-        # # Sql lite database (only for this container)
-        # - httpapitemplates_restlitedb:/dbs
         # Base code
         - ./backend:/code
         # Rest API configuration
         - ./vanilla/specs:/code/restapi/confs/endpoints
         # Rest API services models
         - ./vanilla/models:/code/commons/models/custom
+        # Rest API asynchrounous tasks
+        - ./vanilla/tasks:/code/commons/tasks/custom
         # Rest API endpoints
         - ./vanilla/apis:/code/restapi/resources/custom
         # # B2ACCESS dev certificates
@@ -104,10 +104,15 @@ rest:
         # Tests
         - ./vanilla/tests:/code/test/custom
 
+        # # Uploads dir
+        # - httpapitemplates_tmpuploads:/uploads
+        # # Sql lite database (only for this container)
+        # - httpapitemplates_restlitedb:/dbs
         # # External irods Authority
         # - ./certs/caauth:/opt/certificates/caauth
         # # External irods User
-        # - ./certs/user:/opt/certificates/paolo
+        # - ./certs/user:/opt/certificates/mynewuser
+
     # volumes_from:
     #   - certshare
 

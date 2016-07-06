@@ -13,6 +13,7 @@ rest:
     # - searchindex:el
 
 worker:
+  # command: sleep infinity
   links:
     # Note: VERY IMPORTANT to keep the same redis name
     # between worker and rest

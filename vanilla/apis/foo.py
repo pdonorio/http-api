@@ -5,23 +5,19 @@ An endpoint example
 """
 
 from __future__ import absolute_import
+
 from commons.logs import get_logger
 from ..base import ExtendedApiResource
 from .. import decorators as decorate
-
 # # AUTH
 # from ...auth import auth
 
 logger = get_logger(__name__)
 
-from commons.services.tasks import celery_app
 
-@celery_app.task
-def foo():
-    print("TEST")
+####################
+# Define endpoints
 
-
-#####################################
 class SomeRestEndpoint(ExtendedApiResource):
 
     _index_name = 'justatest'
@@ -32,7 +28,12 @@ class SomeRestEndpoint(ExtendedApiResource):
 
         hello = "Hello world"
         logger.info(hello)
-        foo.delay()
+
+        # ####################
+        # # Test celery asynchronous tasks
+        # from commons.tasks.base.examples import foo, foo_in_context
+        # foo.delay()
+        # foo_in_context.delay("Hello")
 
         # ####################
         # # Test graph

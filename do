@@ -242,14 +242,19 @@ elif [ "$1" == "clean" ]; then
     echo "REMOVE DATA"
     echo "are you really sure?"
     sleep 5
-    $compose_run stop
-    $compose_run rm -f
-    for volume in $volumes;
-    do
-        echo "Remove $volume volume"
-        $vcom rm $volume
-        sleep 1
-    done
+
+    # From docker-compose man:
+    # > "down": Stop and remove containers, networks, images, and volumes
+    $compose_run down
+
+    # $compose_run stop
+    # $compose_run rm -f
+    # for volume in $volumes;
+    # do
+    #     echo "Remove $volume volume"
+    #     $vcom rm $volume
+    #     sleep 1
+    # done
     exit 0
 
 elif [ "$1" == "addiuser" ]; then
@@ -301,8 +306,12 @@ then
     case $2 in
         ''|*[!0-9]*) ;;
         *)
-            echo "Setting $2 worker(s)"
-            $compose_run scale worker=$2
+            service="worker"
+            echo "Setting $2 $service(s)"
+            # Make sure we bring up the containers and all of its links
+            $compose_run up -d $service
+            # Scale to the number of requested workers
+            $compose_run scale $service=$2
             ;;
     esac
 
