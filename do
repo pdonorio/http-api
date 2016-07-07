@@ -1,7 +1,9 @@
 #!/bin/bash
 
+docker_volumes_prefix="httpapitemplate"
+
 echo "# ############################################ #"
-echo -e "\t\tEUDAT HTTP API development"
+echo -e "\t\tHTTP API development"
 echo "# ############################################ #"
 echo ""
 
@@ -45,9 +47,20 @@ restcontainer="rest"
 proxycontainer="proxy"
 clientcontainer="apitests"
 vcom="docker volume"
-vprefix="httpapitemplate_"
-
 compose_base="docker-compose -f docker-compose.yml"
+
+
+# Check the prefix
+if [ "$docker_volumes_prefix" == "httpapitemplate" ]; then
+    echo '$docker_volumes_prefix: "httpapitemplate"'
+    echo ""
+    echo "Please consider changing the main docker volume prefix"
+    echo "(Line 3 of the './do' file)"
+    echo ""
+    exit 1
+else
+    export VOLUMES_PREFIX="$docker_volumes_prefix"
+fi
 
 # Init mode
 if [ "$1" == "init" ]; then
@@ -161,21 +174,27 @@ if [ "$1" == "update" ]; then
     exit 0
 fi
 
-# Check if init has been executed
+#######################################
 
-volumes=`$vcom ls | awk '{print $NF}' | grep "^$vprefix"`
-#echo -e "VOLUMES are\n*$volumes*"
-if [ "$volumes"  == "" ]; then
-    if [ "$1" != "init" ]; then
-        echo ""
-        echo "Docker volumes missing! Please *init* this project."
-        echo "To do so just run:"
-        echo ""
-        echo "\$ $0 init"
-        echo ""
-        exit 1
-    fi
-fi
+## // TO FIX: make this parametric:
+# https://github.com/pdonorio/restapi-template/issues/1
+
+# # Check if init has been executed
+
+# volumes=`$vcom ls | awk '{print $NF}' | grep "^${docker_volumes_prefix}_"`
+
+# #echo -e "VOLUMES are\n*$volumes*"
+# if [ "$volumes"  == "" ]; then
+#     if [ "$1" != "init" ]; then
+#         echo ""
+#         echo "Docker volumes are missing."
+#         echo "You must *init* this project:"
+#         echo ""
+#         echo "\$ $0 init"
+#         echo ""
+#         exit 1
+#     fi
+# fi
 
 ################################
 # EXECUTE OPTIONS
@@ -204,7 +223,7 @@ if [ "$1" == "init" ]; then
     fi
     exit 0
 
-# EUDAT training
+# training
 elif [ "$1" == "training" ]; then
     container="training"
     $compose_run rm -f $container

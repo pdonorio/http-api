@@ -21,7 +21,7 @@ graphdb:
       #NEO4J_HEAP_MEMORY
       #NEO4J_CACHE_MEMORY
     volumes:
-        - httpapitemplate_graphdata:/data
+        - ${VOLUMES_PREFIX}_graphdata:/data
 
 #################################
 # TextIndexing elasticsearch
@@ -34,7 +34,7 @@ searchindex:
   #     # http://stackoverflow.com/a/18152957/2114395
   #     #https://www.loggly.com/blog/nine-tips-configuring-elasticsearch-for-high-performance/
   volumes:
-      - httpapitemplate_elasticdata:/usr/share/elasticsearch/data
+      - ${VOLUMES_PREFIX}_elasticdata:/usr/share/elasticsearch/data
       - ./confs/elastic:/usr/share/elasticsearch/config
 
 #################################
@@ -44,7 +44,7 @@ redqueue:
   command: redis-server --appendonly yes
   hostname: myqueue
   volumes:
-      - httpapitemplate_redisdata:/data
+      - ${VOLUMES_PREFIX}_redisdata:/data
 
 worker:
   hostname: celworker
@@ -108,9 +108,9 @@ rest:
         - ./vanilla/tests:/code/test/custom
 
         # # Uploads dir
-        # - httpapitemplates_tmpuploads:/uploads
+        # - ${VOLUMES_PREFIX}_tmpuploads:/uploads
         # # Sql lite database (only for this container)
-        # - httpapitemplates_restlitedb:/dbs
+        # - ${VOLUMES_PREFIX}_restlitedb:/dbs
         # # External irods Authority
         # - ./certs/caauth:/opt/certificates/caauth
         # # External irods User
@@ -135,7 +135,6 @@ proxy:
     volumes:
         # Proxy configuration
         - ./confs/nginx.conf:/etc/nginx/nginx.conf
-## Certificates to be added
     links:
         - rest:restapi
 
@@ -145,14 +144,14 @@ certshare:
     image: alpine
     command: echo "Data volume on"
     volumes:
-      - httpapitemplate_sharedcerts:/opt/certificates
+      - ${VOLUMES_PREFIX}_sharedcerts:/opt/certificates
 
 #################################
 # Postgres database server
 sql:
     image: postgres
     volumes:
-      - httpapitemplate_sqldata:/var/lib/postgresql/data
+      - ${VOLUMES_PREFIX}_sqldata:/var/lib/postgresql/data
     environment:
       ## FOR IRODS
         POSTGRES_USER: irods
@@ -178,10 +177,10 @@ icat:
 
     hostname: rodserver
     volumes:
-        - httpapitemplate_etcconf:/etc
-        - httpapitemplate_irodshome:/home/irods
-        - httpapitemplate_irodsvar:/var/lib/irods
-        - httpapitemplate_eudatopt:/opt
+        - ${VOLUMES_PREFIX}_etcconf:/etc
+        - ${VOLUMES_PREFIX}_irodshome:/home/irods
+        - ${VOLUMES_PREFIX}_irodsvar:/var/lib/irods
+        - ${VOLUMES_PREFIX}_eudatopt:/opt
         # a script to do operations inside the irods container
         - ./confs/irestart.sh:/irestart
     volumes_from:
