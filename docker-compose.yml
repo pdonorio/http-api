@@ -47,15 +47,11 @@ redqueue:
       - ${VOLUMES_PREFIX}_redisdata:/data
 
 worker:
+  extends:
+    file: docker-compose.yml
+    service: rest
   hostname: celworker
-  image: eudatb2safe/apiserver
   command: celery worker -A restapi.resources.services.celery.worker.celery_app
-  volumes:
-    # Base code
-    - ./backend:/code
-    # Rest API asynchrounous tasks
-    - ./vanilla/tasks:/code/commons/tasks/custom
-  working_dir: /code
 
 #################################
 # iRODS iCAT server for EUDAT B2safe

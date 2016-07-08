@@ -13,10 +13,10 @@ rest:
     # - redqueue:queue
 
 worker:
-  # command: sleep infinity
+  command: sleep infinity
+  # These links must be the same as rest above
   links:
-    # Note: VERY IMPORTANT to keep the same redis name
-    # between worker and rest
+    - graphdb:gdb
     - redqueue:queue
 
 graphdb:

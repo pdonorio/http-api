@@ -31,7 +31,7 @@ class TestDataObjects(TestUtilities):
     @classmethod
     def setUpClass(cls):
         logger.info('### Setting up flask server ###')
-        app = create_app(testing=True)
+        app = create_app(testing_mode=True)
         cls.app = app.test_client()
 
         loginURI = os.path.join(AUTH_URI, 'login')
