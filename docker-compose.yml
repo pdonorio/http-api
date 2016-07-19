@@ -126,7 +126,7 @@ apitests:
 #################################
 # Nginx proxy
 proxy:
-    image: nginx
+    image: nginx:alpine
     hostname: myproxy
     volumes:
         # Proxy configuration
